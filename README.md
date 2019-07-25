@@ -5,7 +5,7 @@
 Install it:
 
 ```bash
-git clone https://github.com/DieuKoukiFactori/discord-emojis-collector
+git clone https://github.com/DieuKoukiFactori/discord-emojis-collector.git
 ```
 
 Install dependencies:
