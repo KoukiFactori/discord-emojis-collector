@@ -21,7 +21,7 @@ console.log(chalk`{yellow
 prompt([
 	{ name: "token", message: "Client token :"}
 ]).then(answers => {
-	client.login(answers.token).catch(_ => { console.error(chalk`{red /!\\ }{bold Token invalide}`), process.exit() })
+	client.login(answers.token).catch(_ => { console.error(chalk`{red /!\\ }{bold Invalid token !}`), process.exit() })
 })
 
 
