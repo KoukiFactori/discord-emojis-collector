@@ -1,1 +1,0 @@
-# discord-emojis-collector
