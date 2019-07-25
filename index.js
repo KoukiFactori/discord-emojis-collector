@@ -8,13 +8,13 @@ const { prompt } = require('inquirer')
 const chalk = require('chalk') 
 
 console.log(chalk`{yellow
-***********************************
-*                                 *
-*   Collecteur d'emojis discord   *
-*                                 *
-*       par Asriel & Ahkrïn       *
-*                                 *
-***********************************
+************************************
+*                                  *
+*     Discord Emojis Collector     *
+*                                  *
+*        by Asriel & Ahkrïn        *
+*                                  *
+************************************
 }`)
 
 
@@ -61,7 +61,7 @@ const downloadEmojis = async (guildID) => {
 		name: 'restart',
 		message: 'Téléchargement terminé, voulez vous télécharger les emotes d\'un autre serveur ?'
 	}).then(({ restart }) => {
-		if(!restart) { console.error(chalk`{bold Fin du programme...}`), process.exit() }
+		if(!restart) { console.error(chalk`{bold Shutdown program...}`), process.exit() }
 		client.emit('ready')
 	})
 	
