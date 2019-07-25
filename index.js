@@ -59,7 +59,7 @@ const downloadEmojis = async (guildID) => {
 	await prompt({
 		type: 'confirm',
 		name: 'restart',
-		message: 'Téléchargement terminé, voulez vous télécharger les emotes d\'un autre serveur ?'
+		message: 'Download finished, do you want to download emotes from another server?'
 	}).then(({ restart }) => {
 		if(!restart) { console.error(chalk`{bold Shutdown program...}`), process.exit() }
 		client.emit('ready')
