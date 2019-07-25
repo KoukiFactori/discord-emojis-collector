@@ -1,8 +1,8 @@
-﻿const Discord = require('discord.js');
-const client = new Discord.Client();
+const Discord = require('discord.js')
+const client = new Discord.Client()
 
-const axios = require('axios');
-const fs = require('fs');
+const axios = require('axios')
+const fs = require('fs')
 
 const { prompt } = require('inquirer')
 const chalk = require('chalk') 
@@ -20,13 +20,13 @@ console.log(chalk`{yellow
 
 prompt([
 	{ name: "token", message: "Client token :"}
-]).then(answers => {
-	client.login(answers.token).catch(_ => { console.error(chalk`{red /!\\ }{bold Invalid token !}`), process.exit() })
+]).then(({ token }) => {
+	client.login(token).catch(_ => { console.error(chalk`{red /!\\ }{bold Invalid token !}`), process.exit() })
 })
 
 
 client.on('ready', async () => {
-	const guilds = client.guilds.map(guild => `${guild.id} - ${guild.name}`)
+	const guilds = client.guilds.map(({ id, name }) => `${id} - ${name}`)
 	getGuild(guilds)
 		.then(({ guild: guildID }) => downloadEmojis(guildID))
 })
@@ -37,8 +37,8 @@ const getGuild = (guilds) => {
 			name: "guild",
 			type: 'list',
 			message: 'Select a guild :',
-			filter: function(a) {
-				return a.split(' ')[0]
+			filter: function(str) {
+				return str.split(' ')[0]
 			},
 			choices: guilds
 		}
