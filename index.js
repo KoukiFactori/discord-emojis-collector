@@ -25,7 +25,7 @@ prompt([
 })
 
 
-client.on('ready', async () => {
+client.on('ready', () => {
 	const guilds = client.guilds.map(({ id, name }) => `${id} - ${name}`)
 	getGuild(guilds)
 		.then(({ guild: guildID }) => downloadEmojis(guildID))
