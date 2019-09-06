@@ -2,10 +2,12 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 
 const axios = require('axios')
-const fs = require('fs')
-
+const { createWriteStream, promises: fsPromises } = require('fs')
 const { prompt } = require('inquirer')
-const chalk = require('chalk') 
+const chalk = require('chalk')
+
+const path = require('path')
+const PATH_OUTPUT = path.join(__dirname, '../output')
 
 prompt([
 	{ name: "token", message: "Client token :"}
@@ -14,10 +16,8 @@ prompt([
 })
 
 
-client.on('ready', async () => {
-	const guilds = client.guilds.map(({ id, name }) => `${id} - ${name}`)
-	getGuild(guilds)
-		.then(({ guild: guildID }) => downloadEmojis(guildID))
+client.once('ready', async () => {
+	main()
 })
 
 const getGuild = (guilds) => {
@@ -26,21 +26,21 @@ const getGuild = (guilds) => {
 			name: "guild",
 			type: 'list',
 			message: 'Select a guild :',
-			filter: function(str) {
-				return str.split(' ')[0]
-			},
+			filter,
 			choices: guilds
 		}
 	])
 }
 
-const downloadEmojis = async (guildID) => {
-	const emojis = client.guilds.get(guildID).emojis.map(({  name, id, animated }) => [name, id, animated])
+const downloadEmojis = async (emojis) => {
+	await fsPromises.stat(PATH_OUTPUT).catch(async (err) => {
+		if(err.code === 'ENOENT') await fsPromises.mkdir(PATH_OUTPUT)
+	})
+
 	for await (const emoji of emojis) {
 		const url = `https://cdn.discordapp.com/emojis/${emoji[1]}.${emoji[2] ? "gif" : "png"}`
 
-		const file = fs.createWriteStream(`${emoji[0]}.${emoji[2] ? "gif" : "png"}`)
-		
+		const file = createWriteStream(path.join(PATH_OUTPUT, `${emoji[0]}.${emoji[2] ? "gif" : "png"}`))
 		await axios({url, responseType: 'stream'})
 			.then(({ data }) => data.pipe(file))
 	}
@@ -51,8 +51,20 @@ const downloadEmojis = async (guildID) => {
 		message: 'Download finished, do you want to download emotes from another server?'
 	}).then(({ restart }) => {
 		if(!restart) { console.error(chalk`{bold Shutdown program...}`), process.exit() }
-		client.emit('ready')
+		main()
 	})
 	
 }
-		
+
+function main() {
+	const guilds = client.guilds.map(({ id, name }) => `${id} - ${name}`)
+	getGuild(guilds)
+		.then(({ guild: guildID }) => {
+			const emojis = client.guilds.get(guildID).emojis.map(({  name, id, animated }) => [name, id, animated])
+			downloadEmojis(emojis)
+		})
+}
+
+function filter(str) {
+	return str.split(' ')[0]
+}
