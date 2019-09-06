@@ -17,5 +17,5 @@ npm install
 Run the program:
 
 ```bash
-node index.js
+node src/index.js
 ```
