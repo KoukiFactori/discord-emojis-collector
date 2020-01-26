@@ -14,7 +14,7 @@ Install dependencies:
 npm install
 ```
 
-Run the program:
+Run :
 
 ```bash
 node src/index.js
